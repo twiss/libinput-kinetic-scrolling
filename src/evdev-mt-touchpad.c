@@ -451,6 +451,7 @@ tp_end_sequence(struct tp_dispatch *tp, struct tp_touch *t, uint64_t time)
 static void
 tp_stop_actions(struct tp_dispatch *tp, uint64_t time)
 {
+	tp->device->scroll_coast.start = 0;
 	tp_edge_scroll_stop_events(tp, time);
 	tp_gesture_cancel(tp, time);
 	tp_tap_suspend(tp, time);
@@ -2280,6 +2281,8 @@ tp_keyboard_event(uint64_t time, struct libinput_event *event, void *data)
 
 	if (!tp->dwt.dwt_enabled)
 		return;
+
+	tp->device->scroll_coast.start = 0;
 
 	if (tp_key_ignore_for_dwt(key))
 		return;
