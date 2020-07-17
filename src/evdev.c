@@ -2689,7 +2689,7 @@ evdev_post_scroll(struct evdev_device *device,
 		device->scroll_coast.x = event.x;
 		device->scroll_coast.y = event.y;
 		device->scroll_coast.direction = device->scroll.direction;
-		if (abs(event.x) + abs(event.y) > 0.2) {
+		if (fabs(event.x) + fabs(event.y) > 0.2) {
 			device->scroll_coast.start = time;
 		}
 		
@@ -2710,15 +2710,11 @@ evdev_post_scroll(struct evdev_device *device,
 	}
 }
 
-
 void
 evdev_stop_scroll(struct evdev_device *device,
 		  uint64_t time,
 		  enum libinput_pointer_axis_source source)
 {
-	const struct normalized_coords zero = { 0.0, 0.0 };
-	const struct discrete_coords zero_discrete = { 0.0, 0.0 };
-
 	if (time - device->scroll_coast.start < 65000) {
 		libinput_timer_set_flags(&device->scroll_coast.timer, time + 1000, TIMER_FLAG_NONE);
 	}
